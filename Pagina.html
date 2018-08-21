@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Green Leaves</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js" ></script>
+<script src="jquery.js"></script>
+<script src="app.js"></script>
+<link rel="stylesheet" href="bootstrap.min.css">
+<script type="text/javascript">
+function valida(nombre,email,telefono,fecha,ciudad) {
+  nombre=document.getElementById(nombre);
+   email=document.getElementById(email);
+   telefono=document.getElementById(telefono);
+   fecha=document.getElementById(fecha);
+  var ok = true;
+  var msg = "Debes escribir algo en los campos:\n";
+  if(f.nombre.value == "")
+  {
+    msg += "- Nombre\n";
+    ok = false;
+  }
+
+  if(f.email.value == "")
+  {
+    msg += "- Email\n";
+    ok = false;
+  }
+
+  if(f.telefono.value == "")
+  {
+    msg += "- Telefono\n";
+    ok = false;
+  }
+
+  if(f.fecha.value == "")
+  {
+    msg += "- Fecha\n";
+    ok = false;
+  }
+
+  if(ok == false)
+    alert(msg);
+  return ok;
+}
+</script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<style> label{ 
+width: 150px;
+display: inline-block; }
+</style>
+</head>
+<body ng-app="formApp" onload="getLocation()" >
+	<div class="contenedor" 
+	   style="width: 2000px;
+	   margin: 3rem;
+	   padding: 4rem; 
+	   text-align: left;
+	   height: 200px;
+	   box-shadow: inset-5px;">
+	 <div class="row">
+      <div class="col-lg-6" 
+      style="background-color:#3fff33;
+      width: 100px;
+      margin-left: 8rem;
+      margin-right: 15rem;
+      height: 200px;
+      text-align:left; 
+      border-radius: 20px;
+      -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
+      -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
+       box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);">
+	   <h1 style=" color: #FFFF;">Green Leaves</h1>
+	    <img src="hoja.png" width="200" height="100" align= "right">
+      </div>
+     </div>
+    </div>
+    <div ng-controller="MainCtrl">
+	<form name="Form" action="Recibo.php" action="captcha.php" method="post" style="padding: 7%"; onsubmit="return valida('nombre','email','telefono','fecha','ciudad')">
+	<p><label>Nombre : </label> 
+	<input placeholder="Nombre" type="text" required name="nombre" ng-model="nombre" size ="50"></p>
+	<p/>
+	<p><label>Email : </label>
+	<input placeholder="Email" type="email" required name="email"ng-model="email" size="50">
+	<span ng-show="Form.$pristine && Form.email.$error.email"></span>
+    </p>
+	<p/>
+	<p><label>Telefono : </label>
+	<input type="tel" required name="telefono" ng-model="telefono" placeholder="(Código de área) Número" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"></p>
+	<p/>
+	<p><label>Fecha : </label>
+    <input type="date" required name="Fecha" data-date-format="dd ([ \t.-])* m ([ \t.-])* y" ng-model="Fecha" min="1917-08-20">
+    <p/>
+<p><label>Ciudad y estado : </label> <p/>
+
+<div id="mapholder"></div>
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    var latlon = position.coords.latitude + "," + position.coords.longitude;
+    var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="
+    +latlon+"&zoom=14&size=400x300&key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU";
+    document.getElementById("mapholder").innerHTML = "<img src='"+img_url+"'>";
+     
+}
+//To use this code on your website, get a free API key from Google.
+//Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+</script>
+
+      </div>
+	<p/>
+	<div style="text-align: right;width:500px">
+	<div class="g-recaptcha" data-sitekey="6Lfy0GoUAAAAAD59LZ3VLuSrsZqiihieoD9aqmKF" data-theme="light"></div>
+	<button id="send" type= "submit" class="btn btn-primary" 
+	style=" border-radius: 5px;width:70px; height:35px" ng-click="submitForm(formData)"> Enviar</button>
+	</form>
+</body>
+</html>
